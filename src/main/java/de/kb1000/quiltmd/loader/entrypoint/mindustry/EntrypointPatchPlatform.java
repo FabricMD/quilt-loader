@@ -39,7 +39,8 @@ public class EntrypointPatchPlatform extends EntrypointPatch {
 			while (it.hasNext()) {
 				AbstractInsnNode insn = it.next();
 				if (insn instanceof MethodInsnNode) {
-					if (((MethodInsnNode) insn).owner.equals("java/lang/ClassLoader") && ((MethodInsnNode) insn).name.equals("getSystemClassLoader")) {
+					final MethodInsnNode methodInsnNode = (MethodInsnNode) insn;
+					if (methodInsnNode.owner.equals("java/lang/ClassLoader") && methodInsnNode.name.equals("getSystemClassLoader")) {
 						debug("Patching " + TARGET + " to support Java mods under Fabric");
 						patched = true;
 						it.set(new LdcInsnNode(Type.getType(TARGET_DESCRIPTOR)));

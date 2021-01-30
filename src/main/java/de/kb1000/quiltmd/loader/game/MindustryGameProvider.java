@@ -1,5 +1,6 @@
 package de.kb1000.quiltmd.loader.game;
 
+import de.kb1000.quiltmd.loader.entrypoint.mindustry.EntrypointPatchHook;
 import de.kb1000.quiltmd.loader.entrypoint.mindustry.EntrypointPatchPlatform;
 import de.kb1000.quiltmd.loader.mindustry.MindustryVersionLookup;
 import net.fabricmc.api.EnvType;
@@ -26,7 +27,8 @@ public class MindustryGameProvider implements GameProvider {
 	private String[] arguments;
 
 	public static final EntrypointTransformer TRANSFORMER = new EntrypointTransformer(it -> Arrays.asList(
-			new EntrypointPatchPlatform(it)
+			new EntrypointPatchPlatform(it),
+			new EntrypointPatchHook(it)
 	));
 
 	@Override
@@ -81,6 +83,10 @@ public class MindustryGameProvider implements GameProvider {
 	}
 
 	private Path getLaunchDirectoryImpl() {
+		// For servers, the directory is just "config" in the current directory.
+		if (envType == EnvType.SERVER) {
+			return Paths.get("config");
+		}
 		// Right now, this is a reimplementation of what's found in arc.util.OS#getAppDataDirectoryString,
 		// without the dependencies, and directly returning a Path. This is needed because this is called
 		// just after the GameProvider is loaded (no references to the game code permitted).
