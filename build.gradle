@@ -165,6 +165,10 @@ license {
 
 	// Exclude gson since it is google's code, we just modify and bundle it
 	exclude '**/lib/gson/*.java'
+
+	matching("**/fabricmd/**.java") {
+		header = file("FABRICMD_HEADER")
+	}
 }
 
 publishing {
